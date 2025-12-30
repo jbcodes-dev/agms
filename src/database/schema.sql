@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS DHT_data;
+
+CREATE TABLE DHT_data (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	temperature NUMERIC,
+	humidity NUMERIC,
+	timestamp DATETIME
+);

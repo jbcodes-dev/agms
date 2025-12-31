@@ -13,18 +13,16 @@ void setup() {
 void loop() {
   delay(2000);
   
-	float h = dht.readHumidity();
 	float t = dht.readTemperature();
+	float h = dht.readHumidity();
 
   if (isnan(h) || isnan(t)) {
-    Serial.print("Failed to read.\n");
+    Serial.print("E\n");
     return;
   }
 
-	Serial.print("H: ");
-	Serial.print(h);
-
-	Serial.print(" | T: ");
 	Serial.print(t);
+	Serial.print(":");
+	Serial.print(h);
   Serial.print("\n");
 }

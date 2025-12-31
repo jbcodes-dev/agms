@@ -4,7 +4,6 @@ import dbhandler
 
 # create database handler
 DBHandler = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
-DBHandler.create_connection()
 
 # create serial connection
 ser = serial.Serial('/dev/ttyACM0', 9600)

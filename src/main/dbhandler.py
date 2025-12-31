@@ -4,33 +4,28 @@ import sys
 class DBHandler:
     def __init__(self, db_file):
         self.db_file = db_file
-        self.conn = None
-        self.cursor = None
     
-    def create_connection(self):
-        """ Create connection to database. """
-        self.conn = sqlite3.connect(self.db_file)
-        self.create_cursor()
-
-    def create_cursor(self):
-        """ Create cursor for database navigation. """
-        self.cursor = self.conn.cursor()
-
-    def close_connection(self):
-        """ Close connection to database and purge cursor. """
-        self.conn.close()
-        self.conn = None
-        self.cursor = None
-
     def insert_data(self, table: str, data: dict):
         """ Insert data into a table using a dict. """
-        if table == "DHT_data":
-            self.cursor.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, datetime('now'))", (data['temperature'], data['humidity']))
-            self.conn.commit()
+        with sqlite3.connect(self.db_file) as conn:
+            cur = conn.cursor()
+
+            if table == "DHT_data":
+                cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, datetime('now'))", (data['temperature'], data['humidity']))
+                conn.commit()
+
+    def get_data(self, statement: str):
+        """ Execute an SQL statement and return data. Used outside this class for database access. """
+        with sqlite3.connect(self.db_file) as conn:
+            cur = conn.cursor()
+            data = cur.execute(statement).fetchall()
+            list(data)
+            
+        return data
 
     def print_table(self, table: str):
         """ Print table contents. """
-        for row in self.cursor.execute(f"SELECT * FROM {table}"):
-            print(row)
-
-
+        with sqlite3.connect(self.db_file) as conn:
+            cur = conn.cursor()
+            for row in cur.execute(f"SELECT * FROM {table}"):
+                print(row)

@@ -14,3 +14,27 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+
+# mainloop
+
+"""
+
+fetch:
+    get temp_humidity reading
+    get soil_moisture reading
+    get time of day
+    
+    send to database
+
+decode:
+    temp_humidity > some_value ? airflow=true : airflow=false
+    soil_moisture < some_value ? irrigation=true : irrigation=false # how long is determined by how low the value is in algorithm.py
+    17.59 < time_of_day < 5.59 ? lighting=true : lighting=false
+
+execute:
+    set airflow=value
+    set irrigation=value
+    set lighting=value
+
+"""

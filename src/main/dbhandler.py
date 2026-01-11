@@ -14,6 +14,10 @@ class DBHandler:
                 cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, datetime('now'))", (data['temperature'], data['humidity']))
                 conn.commit()
 
+            if table == "soil_data":
+                cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, datetime('now'))", (data['temperature'], data['moisture']))
+                conn.commit()
+
     def get_data(self, statement: str):
         """ Execute an SQL statement and return data. Used outside this class for database access. """
         with sqlite3.connect(self.db_file) as conn:

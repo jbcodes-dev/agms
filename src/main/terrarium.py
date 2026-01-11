@@ -61,7 +61,7 @@ class Terrarium(BaseSystem):
                     self.temperature = self._dht.temperature
                     self.humidity = self._dht.humidity
 
-                    print(f"[{datetime.now()}] - T: {:.1f} | H: {.2f}")
+                    print(f"[{datetime.now()}] - T: {self.temperature} | H: {self.humidity}")
 
                 except RuntimeError as err:
                     self._dht.exit()
@@ -122,6 +122,7 @@ class Terrarium(BaseSystem):
                 self._sensor = None
 
                 self._setup()
+
             ### PROPERTIES ###
 
             @property
@@ -180,7 +181,7 @@ class Terrarium(BaseSystem):
 
             ### FUNCTIONALITY ###
 
-            def change_relay_state(self, new_state)
+            def change_relay_state(self, new_state):
                     print("LOG: changing fan state")
 
                     if new_state:
@@ -198,6 +199,39 @@ class Terrarium(BaseSystem):
             self.add_module(Terrarium.IrrigationSystem.WaterPumpRelay(7))
 
     ### LIGHTING ###
+
+    class LightingSubsystem(BaseSystem.SubSystem):
+        
+        class LEDStripRelay(BaseSystem.SubSystem.Module):
+            def __init__(self, pin):
+                super().__init__("Lighting", "LED Strip Relay")
+
+                self._pin = pin
+
+                self._relay_state = False
+
+            ### PROPERTIES ###
+
+            @property
+            def pin(self):
+                return self._pin
+            
+            @property
+            def relay_state(self):
+                return self._relay_state
+            
+            ### FUNCTIONALITY ###
+
+            def change_relay_state(self, new_state):
+                print("LOG: changing led strip state")
+
+                if new_state:
+                    GPIO.output(self.pin, GPIO.HIGH)
+                    self.relay_state = True
+
+                else:
+                    GPIO.output(self.pin, GPIO.LOW)
+                    self.relay_state = False
 
     ### TERRARIUM ###
 

@@ -10,6 +10,8 @@ import RPi.GPIO as GPIO
 
 class Terrarium(BaseSystem):
 
+    ### HUMIDITY REGULATION ###
+
     class HumidityRegulation(BaseSystem.Subsystem):
 
         class HumiditySensor(BaseSystem.Subsystem.Module):
@@ -53,7 +55,7 @@ class Terrarium(BaseSystem):
                 self._dht = adafruit.DHT22(self._pin)
 
             def fetch(self):
-                print(f"LOG: fetching {self._name} readings for time {datatime.now()}")
+                print(f"LOG: fetching {self._name} readings for time {datetime.now()}")
 
                 try:
                     self.temperature = self._dht.temperature
@@ -85,7 +87,7 @@ class Terrarium(BaseSystem):
 
             ### FUNCTIONALITY ###
 
-            def change_relay_state(self, new_state)
+            def change_relay_state(self, new_state):
                     print("LOG: changing fan state")
 
                     if new_state:
@@ -95,6 +97,15 @@ class Terrarium(BaseSystem):
                     else:
                         GPIO.output(self.pin, GPIO.LOW)
                         self.relay_state = False
+
+
+        def __init__(self):
+            super().__init__("Humidity Regulation", "Monitor and Control Air Temperature and Humidity")
+
+            self.add_module(Terrarium.HumidityRegulation.HumiditySensor(4))
+            self.add_module(Terrarium.HumidityRegulation.AirflowRelay(5))
+
+    ### IRRIGATION ###
 
     class IrrigationSystem(BaseSystem.Subsystem):
         
@@ -136,7 +147,7 @@ class Terrarium(BaseSystem):
 
             def fetch(self):
                 """ fetch soil moisture and temperature """
-                print(f"LOG: fetching {self._name} readings for time {datatime.now()}")
+                print(f"LOG: fetching {self._name} readings for time {datetime.now()}")
 
                 
                 try:
@@ -149,7 +160,7 @@ class Terrarium(BaseSystem):
                     self._sensor.exit()
                     print(err.args[0])
 
-        class WaterPumpRelay(self, pin):
+        class WaterPumpRelay(BaseSystem.SubSystem.Module):
             def __init__(self, pin):
                 super().__init__("Water Pump", "Pump Relay")
 
@@ -180,8 +191,18 @@ class Terrarium(BaseSystem):
                         GPIO.output(self.pin, GPIO.LOW)
                         self.relay_state = False
 
+        def __init__(self):
+            super().__init__("Irrigation", "Monitor and Control Soil Temperature and Moisture")
 
+            self.add_module(Terrarium.IrrigationSystem.SoilMoistureSensor(6))
+            self.add_module(Terrarium.IrrigationSystem.WaterPumpRelay(7))
 
+    ### LIGHTING ###
 
+    ### TERRARIUM ###
 
-            
+    def __init__(self):
+        super().__init__("Terrarium")
+
+        self.add_subsystem(Terrarium.HumidityRegulation())
+        self.add_subsystem(Terrarium.IrrigationSystem())

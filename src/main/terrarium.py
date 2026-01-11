@@ -68,7 +68,7 @@ class Terrarium(BaseSystem):
 
         class AirflowRelay(BaseSystem.Subsystem.Module):
             def __init__(self, pin):
-                super().__init__("RPi Cooling Fans", "Airflow Relay")
+                super().__init__("Terrarium Fans", "Airflow Relay")
 
                 self._pin = pin
                 self._relay_state = False
@@ -148,3 +148,40 @@ class Terrarium(BaseSystem):
                 except RuntimeError as err:
                     self._sensor.exit()
                     print(err.args[0])
+
+        class WaterPumpRelay(self, pin):
+            def __init__(self, pin):
+                super().__init__("Water Pump", "Pump Relay")
+
+                self._pin = pin
+
+                self._relay_state = False
+
+            ### PROPERTIES ###
+
+            @property
+            def pin(self):
+                return self._pin
+
+            @property
+            def relay_state(self):
+                return self._relay_state
+
+            ### FUNCTIONALITY ###
+
+            def change_relay_state(self, new_state)
+                    print("LOG: changing fan state")
+
+                    if new_state:
+                        GPIO.output(self.pin, GPIO.HIGH)
+                        self.relay_state = True
+
+                    else:
+                        GPIO.output(self.pin, GPIO.LOW)
+                        self.relay_state = False
+
+
+
+
+
+            

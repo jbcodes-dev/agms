@@ -11,6 +11,14 @@ def main():
             print(f"Module Name: {terrarium.subsystems[sub_entry].modules[mod_entry].name}\nModule Desc: {terrarium.subsystems[sub_entry].modules[mod_entry].desc}")
 
 
+    while True:
+
+        ### FETHCH ###
+
+        # temp humidity
+        
+
+
 if __name__ == "__main__":
     main()
 

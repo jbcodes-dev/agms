@@ -15,6 +15,7 @@ def main():
     """
 
     while True:
+        # TODO: figure out where to insert the growth snapshot code
 
         ### FETCH ###
 
@@ -65,7 +66,7 @@ def main():
         In future, the algorithm to engage each relay will go through a separate class to be more indepth
         and optimised.
 
-        Each action the algorithm takes will be logged in a text file.
+        Each action the algorithm takes will be logged in a text file for bug fixing and monitoring.
         """
 
         ### EXECUTE ###

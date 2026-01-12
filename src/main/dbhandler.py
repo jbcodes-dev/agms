@@ -10,7 +10,7 @@ class DBHandler:
         with sqlite3.connect(self.db_file) as conn:
             cur = conn.cursor()
 
-            if table == "DHT_data":
+            if table == "air_data":
                 cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, datetime('now'))", (data['temperature'], data['humidity']))
                 conn.commit()
 

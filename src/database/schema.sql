@@ -1,8 +1,24 @@
-DROP TABLE IF EXISTS DHT_data;
+DROP TABLE IF EXISTS air_data;
+DROP TABLE IF EXISTS soil_data;
+DROP TABLE IF EXISTS growth_snapshots;
 
-CREATE TABLE DHT_data (
+CREATE TABLE air_data (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	temperature NUMERIC,
-	humidity NUMERIC,
+	air_temperature NUMERIC,
+	air_humidity NUMERIC,
+	timestamp DATETIME
+);
+
+CREATE TABLE soil_data (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	soil_temperature NUMERIC,
+	soil_moisture NUMERIC,
+	timestamp DATETIME
+);
+
+CREATE TABLE growth_snapshots (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	group INTEGER,
+	capture BLOB NOT NULL,
 	timestamp DATETIME
 );

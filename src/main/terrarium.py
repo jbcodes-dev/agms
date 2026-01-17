@@ -55,6 +55,7 @@ class Terrarium(BaseSystem):
                 self._dht = adafruit.DHT22(self._pin)
 
             def fetch(self):
+                """ Fetch readings from DHT sensor """
                 print(f"LOG: fetching {self._name} readings for time {datetime.now()}")
 
                 try:
@@ -88,6 +89,7 @@ class Terrarium(BaseSystem):
             ### FUNCTIONALITY ###
 
             def change_relay_state(self, new_state):
+                    """ Change pin power to send/stop power to fan relay """
                     print("LOG: changing fan state")
 
                     if new_state:
@@ -117,7 +119,8 @@ class Terrarium(BaseSystem):
                 
                 self._soil_moisture = 0
                 self._soil_temperature = 0
-                
+
+                # for sensor setup                
                 self._i2c_bus = None 
                 self._sensor = None
 
@@ -141,13 +144,13 @@ class Terrarium(BaseSystem):
             ### FUNCTIONALITY ###
 
             def _setup(self):
-                """ setup sensor """
+                """ Setup moisture sensor using adafruit.seesaw library """
                 self._bus = board.I2C()
                 self._sensor = Seesaw(self._bus, add=0x36)
 
 
             def fetch(self):
-                """ fetch soil moisture and temperature """
+                """ Fetch soil temperature and moisture readings """
                 print(f"LOG: fetching {self._name} readings for time {datetime.now()}")
 
                 
@@ -155,7 +158,7 @@ class Terrarium(BaseSystem):
                     self.soil_moisture = self._sensor.moisture_read()
                     self.soil_temperatre = self._sensor.temperature_read()
 
-                    print(f"[{datetime.now()}] - T: {:.1f} | H: {.2f}")
+                    print(f"[{datetime.now()}] - T: {self.soil_temperature} | H: {self.soil_moisture}")
 
                 except RuntimeError as err:
                     self._sensor.exit()
@@ -182,7 +185,7 @@ class Terrarium(BaseSystem):
             ### FUNCTIONALITY ###
 
             def change_relay_state(self, new_state):
-                    print("LOG: changing fan state")
+                    print("LOG: changing water pump state")
 
                     if new_state:
                         GPIO.output(self.pin, GPIO.HIGH)
@@ -233,6 +236,11 @@ class Terrarium(BaseSystem):
                     GPIO.output(self.pin, GPIO.LOW)
                     self.relay_state = False
 
+        def __init__(self):
+            super().__init__(self, "Lighting", "Control lighting relay.")
+
+            self.add_module(Terrarium.LightingSubsystem.LEDStripRelay(7))
+
     ### TERRARIUM ###
 
     def __init__(self):
@@ -240,3 +248,4 @@ class Terrarium(BaseSystem):
 
         self.add_subsystem(Terrarium.HumidityRegulation())
         self.add_subsystem(Terrarium.IrrigationSystem())
+        self.add_subsystem(Terrarium.LightingSubsystem())

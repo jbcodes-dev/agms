@@ -4,18 +4,18 @@ import sys
 # add other project files to path
 sys.path.append("/home/jakebrown/final-year-project/src/main/")
 
-import dbhandler
+from dbhandler import DBHandler
 
 # create flask object
 app = Flask(__name__)
 
 # create database handler object
-DBHandler = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
+db = DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
 
 # index page
 @app.route("/")
 def index():
-    rows = DBHandler.get_data("SELECT * FROM DHT_data ORDER BY timestamp DESC LIMIT 1")
+    rows = db.get_data("SELECT * FROM DHT_data ORDER BY timestamp DESC LIMIT 1")
 
     data = []
 

@@ -2,7 +2,7 @@ from app import App
 
 
 def main():
-    app = App(debug=True)
+    app = App(debug=False, cycle=0, control=True)
 
     app.run()
 

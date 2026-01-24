@@ -18,7 +18,6 @@ CREATE TABLE soil_data (
 
 CREATE TABLE growth_snapshots (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	group INTEGER,
-	capture BLOB NOT NULL,
+	path INTEGER,
 	timestamp DATETIME
 );

@@ -54,7 +54,11 @@ class Algorithm:
             "light": None
         }
 
-        # TODO: implement rule-based fuzzy matching
+        # TODO: implement rule-based fuzzy algorithm for the Humidity Regulation System
+        # TODO: implement a timer-based activation algorithm for the Irrigation System
+        # TODO: implement a time-of-day based activation algorithm for the Lighting System
+
+        ### All values are placeholders and will be changed. ###
 
         # air data eval
         if self.air_data["air_temp"] >= 22.0 or self.air_data["air_humidity"] >= 70.0:
@@ -76,14 +80,12 @@ class Algorithm:
             
 
         # light data eval
-        # TODO: implement this
-        """
+        
         if "05:59" <= self.light_data["time"] <= "18:00":
             action_set["light"] = False
 
         else:
-            action_set["light] = True
-        """
+            action_set["light"] = True
 
         # apply actions
         self.actions = action_set

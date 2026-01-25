@@ -1,4 +1,4 @@
-from picamzero import Camera
+from picamzero import Camera 
 from datetime import datetime, timedelta
 
 
@@ -12,12 +12,17 @@ class PiCam:
         self._snapshots_taken = 0
 
     def take_snapshot(self):
-        filename = f"{self._snapshots_taken + 1}.jpg"
+        location = f"{self._path}/{self._snapshots_taken + 1}.jpg"
 
-        self._cam.take_photo(filename)
+        # add current time to photo
+        # self._cam.annotate(str(datetime.now()))
+
+        # set photo resolution
+        # self._cam.still_size(720, 360)
+        self._cam.take_photo(location)
         
         self._snapshots_taken += 1
         self._last_snapshot_time = datetime.now()
         self._next_snapshot_time = self._last_snapshot_time + timedelta(seconds=self._interval)
         
-        return filename
+        return location 

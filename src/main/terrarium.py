@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 import board
 import adafruit_dht
-from adafruit_seesaw.seesaw import seesaw
+from adafruit_seesaw.seesaw import Seesaw 
 
 import RPi.GPIO as GPIO
 
@@ -12,9 +12,9 @@ class Terrarium(BaseSystem):
 
     ### HUMIDITY REGULATION ###
 
-    class HumidityRegulation(BaseSystem.Subsystem):
+    class HumidityRegulation(BaseSystem.SubSystem):
 
-        class HumiditySensor(BaseSystem.Subsystem.Module):
+        class HumiditySensor(BaseSystem.SubSystem.Module):
             def __init__(self, pin):
                 super().__init__("DHT22", "Humidity Sensor")
 
@@ -69,7 +69,7 @@ class Terrarium(BaseSystem):
                     print(err.args[0])
 
 
-        class AirflowRelay(BaseSystem.Subsystem.Module):
+        class AirflowRelay(BaseSystem.SubSystem.Module):
             def __init__(self, pin):
                 super().__init__("Terrarium Fans", "Airflow Relay")
 
@@ -109,9 +109,9 @@ class Terrarium(BaseSystem):
 
     ### IRRIGATION ###
 
-    class IrrigationSystem(BaseSystem.Subsystem):
+    class IrrigationSystem(BaseSystem.SubSystem):
         
-        class SoilMoistureSensor(BaseSystem.Subsystem.Module):
+        class SoilMoistureSensor(BaseSystem.SubSystem.Module):
             def __init__(self, pin):
                 super().__init__("Capacitive Moisture Spade", "Soil Moisture Sensor")
 

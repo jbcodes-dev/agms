@@ -1,1 +1,3 @@
 .venv/
+src/main/__pycache__/
+snapshots/

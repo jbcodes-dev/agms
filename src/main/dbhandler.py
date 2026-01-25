@@ -19,7 +19,7 @@ class DBHandler:
                 conn.commit()
             
             if table == "growth_snapshots":
-                cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, datetime('now'))", (data['path']))
+                cur.execute(f"INSERT INTO {table} VALUES (NULL, ?, datetime('now'))", (data['path'],))
 
     def get_data(self, statement: str):
         """ Execute an SQL statement and return data. Used outside this class for database access. """

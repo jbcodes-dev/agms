@@ -7,17 +7,24 @@ from datetime import datetime, timedelta
 
 
 class App:
-    def __init__(self, debug, cycle, control):
+    def __init__(self, debug, cycle, control, cycle_length):
         self._debug = debug
         self._cycle = cycle
         self._control = control
+        self._cycle_length = cycle_length
 
         if control:
+            if self._debug:
+                print("[DEBUG] starting in CONTROL mode")
+
             self._db = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
-            self._camera = picam.PiCam("/home/jakebrown/final-year-project/snapshots/control/")
-            self._cycle_interval = 3600
+            self._camera = picam.PiCam("/home/jakebrown/final-year-project/snapshots/control")
+            self._cycle_interval = 30 
 
         else:
+            if self._debug:
+                print("[DEBUG] starting in NORMAL mode")
+
             self._terrarium = terrarium.Terrarium()
             self._db = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
             self._algorithm = algorithm.Algorithm()
@@ -25,23 +32,35 @@ class App:
             self._cycle_interval = 30
 
         self._start_datetime = datetime.now()
-        self._end_datetime = self._start_datetime + timedelta(seconds=1209600)
+        self._end_datetime = self._start_datetime + timedelta(seconds=self._cycle_length)
+
+        if self._debug:
+            print(f"[DEBUG] running for {self._cycle_length} seconds")
 
 
     def control_cycle(self):
         """ Control Cycle """
-
+        
+        if self._debug:
+            print(f"[DEBUG] taking photo")
+        
         # take photo on camera
-        filename = self._camera.take_snapshot()
+        path = self._camera.take_snapshot()
+
+        if self._debug:
+            print(f"[DEBUG] snapshot at: {path}")
 
         # format data for db
         snapshot_data = {
-            "path": self._camera._path + filename
+            "path": path 
         }
 
         # insert to db
         self._db.insert_data("growth_snapshots", snapshot_data)
         
+        if self._debug:
+            print(f"[DEBUG] uploaded snapshot {path} to database")
+
 
     def main_cycle(self):
         """ Main Cycle """
@@ -54,7 +73,7 @@ class App:
 
         # take snapshot if it has been 1 hour
         if datetime.now() >= self._camera._next_snapshot_time:
-            self._camera.take_snapshot()
+            path = self._camera.take_snapshot()
 
         ### FORMAT ###
         # format sensor data
@@ -70,7 +89,7 @@ class App:
 
         # format camera data
         snapshot_data = {
-            "path": self._camera._path
+            "path": path 
         }
 
 
@@ -119,16 +138,25 @@ class App:
     def run(self):
         """ Program Loop """        
 
+        if self._debug:
+            print(f"[DEBUG] starting cycle-{self._cycle}")
+
         # will run for two weeks from start date
         while datetime.now() < self._end_datetime:
             # the control variable is set, only run the control cycle
             if self._control:
                 self.control_cycle()
 
+                if self._debug:
+                    print(f"[DEBUG] sleeping for {self._cycle_interval} seconds")
+
                 time.sleep(self._cycle_interval)
 
             # otherwise run main cycle
             else:
                 self.main_cycle()
+                
+                if self._debug:
+                    print(f"[DEBUG] sleeping for {self._cycle_interval} seconds")
 
                 time.sleep(self._cycle_interval)

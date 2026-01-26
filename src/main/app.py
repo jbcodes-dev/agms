@@ -19,7 +19,7 @@ class App:
 
             self._db = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
             self._camera = picam.PiCam("/home/jakebrown/final-year-project/snapshots/control")
-            self._cycle_interval = 30 
+            self._cycle_interval = 3600 # every hour take a photo
 
         else:
             if self._debug:

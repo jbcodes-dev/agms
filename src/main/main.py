@@ -2,7 +2,9 @@ from app import App
 
 
 def main():
-    app = App(debug=True, cycle=0, control=True, cycle_length=600)
+    runtime = 60 * 60 * 24 * 14 # two weeks
+
+    app = App(debug=True, cycle=0, control=True, cycle_length=runtime)
 
     app.run()
 

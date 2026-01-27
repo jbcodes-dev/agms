@@ -14,11 +14,8 @@ class PiCam:
     def take_snapshot(self):
         location = f"{self._path}/{self._snapshots_taken + 1}.jpg"
 
-        # add current time to photo
-        # self._cam.annotate(str(datetime.now()))
-
         # set photo resolution
-        # self._cam.still_size(720, 360)
+        self._cam.still_size = (720, 360)
         self._cam.take_photo(location)
         
         self._snapshots_taken += 1

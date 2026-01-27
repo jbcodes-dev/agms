@@ -1,3 +1,5 @@
 .venv/
 src/main/__pycache__/
 snapshots/
+src/database/database.db
+

@@ -7,7 +7,10 @@ from datetime import datetime, timedelta
 
 
 class App:
-    def __init__(self, debug, cycle, control, cycle_length):
+    def __init__(self, debug: bool, cycle: int, control: bool, cycle_length: int):
+        """ 
+        Initialise application with settings for debug messages, cycle number, control cycle, and length of cycle.
+        """
         self._debug = debug
         self._cycle = cycle
         self._control = control
@@ -39,7 +42,9 @@ class App:
 
 
     def control_cycle(self):
-        """ Control Cycle """
+        """
+        Take a photo every hour for two weeks to gather control snapshots of growth.
+        """
         
         if self._debug:
             print(f"[DEBUG] taking photo")
@@ -63,7 +68,9 @@ class App:
 
 
     def main_cycle(self):
-        """ Main Cycle """
+        """
+        Fetch sensor data, format data, upload data to database, feed to algorithm, execute actions.
+        """
 
         ### FETCH ###
 
@@ -75,7 +82,9 @@ class App:
         if datetime.now() >= self._camera._next_snapshot_time:
             path = self._camera.take_snapshot()
 
+
         ### FORMAT ###
+
         # format sensor data
         air_data = {
             "air_temp": self._terrarium.HumidityRegulation.HumiditySensor.air_temperature,
@@ -135,8 +144,9 @@ class App:
         self._algorithm.cleanup()
         """
         
+
     def run(self):
-        """ Program Loop """        
+        """ Control the main program loop. """        
 
         if self._debug:
             print(f"[DEBUG] starting cycle-{self._cycle}")

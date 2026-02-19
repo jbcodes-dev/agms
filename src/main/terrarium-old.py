@@ -15,10 +15,10 @@ class Terrarium(BaseSystem):
     class HumidityRegulation(BaseSystem.SubSystem):
 
         class HumiditySensor(BaseSystem.SubSystem.Module):
-            def __init__(self, pin):
+            def __init__(self):
                 super().__init__("DHT22", "Humidity Sensor")
 
-                self._pin = pin         # type board.PIN
+                self._pin = board.D4 # type board.PIN
                 self._temperature = 0   # type float
                 self._humidity = 0      # type float
 
@@ -29,8 +29,8 @@ class Terrarium(BaseSystem):
             ### PROPERTIES ###
 
             @property
-            def pins(self):
-                return self._pins
+            def pin(self):
+                return self._pin
 
             @property
             def temperature(self):
@@ -52,7 +52,7 @@ class Terrarium(BaseSystem):
 
             def _setup(self):
                 """ Setup dht sensor using adafruit library """
-                self._dht = adafruit.DHT22(self._pin)
+                self._dht = adafruit.DHT22(self.pin)
 
             def fetch(self):
                 """ Fetch readings from DHT sensor """
@@ -70,10 +70,10 @@ class Terrarium(BaseSystem):
 
 
         class AirflowRelay(BaseSystem.SubSystem.Module):
-            def __init__(self, pin):
+            def __init__(self):
                 super().__init__("Terrarium Fans", "Airflow Relay")
 
-                self._pin = pin
+                self._pin = board.D5 
                 self._relay_state = False
 
             ### PROPERTIES ###
@@ -104,7 +104,7 @@ class Terrarium(BaseSystem):
         def __init__(self):
             super().__init__("Humidity Regulation", "Monitor and Control Air Temperature and Humidity")
 
-            self.add_module(Terrarium.HumidityRegulation.HumiditySensor(4))
+            self.add_module(Terrarium.HumidityRegulation.HumiditySensor(board.D6))
             self.add_module(Terrarium.HumidityRegulation.AirflowRelay(5))
 
     ### IRRIGATION ###

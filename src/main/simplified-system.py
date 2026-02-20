@@ -1,8 +1,10 @@
 import time
 from datetime import datetime, timedelta
 
+from air_sensor import AirSensor
+
+
 import board
-import adafruit_dht
 from adafruit_seesaw.seesaw import Seesaw
 
 from picamzero import Camera
@@ -11,19 +13,6 @@ import dbhandler
 
 import gpiozero
 
-
-
-class AirSensor:
-    def __init__(self):
-        self.pin = board.D4
-        self.temp = 0
-        self.humidity = 0
-        self.sensor = adafruit_dht.DHT22(self.pin)
-
-    def fetch(self):
-        # TODO: put in error catch method here to prevent crashing
-        self.temp = self.sensor.temperature
-        self.humidity = self.sensor.humidity
 
 
 class SoilSensor:
@@ -268,7 +257,7 @@ def main():
 
     
     # on exit
-    dht.sensor.exit()
+    dht.cleanup()
 
     
 if __name__ == "__main__":

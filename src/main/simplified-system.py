@@ -84,6 +84,8 @@ class PumpRelay:
         self.state = False
         self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
         self.relay.off()
+        self.interval = timedelta(hours=24)
+        self.next_activation = datetime.now()
 
     def set_state(self, new_state):
         self.state = new_state
@@ -93,6 +95,7 @@ class PumpRelay:
 
         else:
             self.relay.off()
+            self.next_activation += self.interval
 
 
 class FanG1Relay:
@@ -118,6 +121,7 @@ class FanG2Relay:
         self.state = False
         self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
         self.relay.off()
+
 
     def set_state(self, new_state):
         self.state = new_state
@@ -209,22 +213,30 @@ def main():
             if config["debug"]:
                 print(f"[DEBUG] ({datetime.now()}) snapshot taken at {path}")
 
-        # algorithm goes here
         # basic algorithm
+        # in future: algorithm will be optimised by including more advanced algorithms such as PID and Rule-based fuzzy inference
+
+
+        # due to the power draw of running a water pump, we will take care of the watering first to ensure the process has finished
+        # in order to free up power for the remaining systems.
+
+        # activate pump for 3 seconds to see how much water is moved
+        # test as part of the system to understand power draw
+        if datetime.now() >= pump.next_activation:
+            pump.set_state(True)
+            time.sleep(2.5)
+            pump.set_state(False)
+
 
         # set light relay
+        # turn on light if time is between 6pm and 6am
         if datetime.now().hour >= 18 or datetime.now().hour < 6:
             light.set_state(True)
         
         else:
             light.set_state(False)
 
-        
-        # set pump relay
-        # need to do something with a timer based on the last pump activation time
-        # will be similar to the camera timer implementation, just longer
 
-        
         # set fan relay
         # if temp and humidity are more than optimum, activate both relays
         # if temp < 18 turn off fan, if temp > 18 and < 24 turn on one fan

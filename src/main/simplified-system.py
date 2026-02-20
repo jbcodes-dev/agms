@@ -213,8 +213,15 @@ def main():
         # test as part of the system to understand power draw
         if datetime.now() >= pump.next_activation:
             pump.set_state(True)
+
+            if config["debug"]:
+                print(f"[DEBUG] ({datetime.now()})  pump: {pump.state}")
+
             time.sleep(2.5)
             pump.set_state(False)
+
+            if config["debug"]:
+                print(f"[DEBUG] ({datetime.now()})  pump: {pump.state}")
 
 
         # set light relay
@@ -245,7 +252,7 @@ def main():
 
         
         if config["debug"]:
-            print(f"[DEBUG] ({datetime.now()}) fanset1: {fanset1.state} | {fanset2.state}")
+            print(f"[DEBUG] ({datetime.now()})  fans: {fanset1.state} | {fanset2.state}")
             print(f"[DEBUG] ({datetime.now()}) light: {light.state}")
 
 

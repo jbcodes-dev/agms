@@ -12,7 +12,8 @@ class RPiCamera:
         self.ss_taken = 0
 
     def take_snapshot(self):
-        location = f"{self.path}/{self.ss_taken + 1}.jpg"
+        # TODO: add try except statement for checking if directory exists
+        location = f"{self.path}{self.ss_taken + 1}.jpg"
 
         self.camera.still_size = (720, 360)
         self.camera.take_photo(location)
@@ -23,4 +24,13 @@ class RPiCamera:
         self.next_ss_time = self.last_ss_time + timedelta(seconds=self.interval)
 
         return location
+
+
+def main():
+    camera = RPiCamera("rpi_camera_test")
+    camera.take_snapshot()
+
+
+if __name__ == "__main__":
+    main()
 

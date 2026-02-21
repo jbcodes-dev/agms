@@ -2,29 +2,13 @@ import time
 from datetime import datetime, timedelta
 
 from air_sensor import AirSensor
-
-
-import board
-from adafruit_seesaw.seesaw import Seesaw
+from soil_sensor import SoilSensor
 
 from picamzero import Camera
 
 import dbhandler
 
 import gpiozero
-
-
-
-class SoilSensor:
-    def __init__(self):
-        self.bus = board.I2C()
-        self.temp = 0
-        self.moisture = 0
-        self.sensor = Seesaw(self.bus, addr=0x36)
-
-    def fetch(self):
-        self.moisture = self.sensor.moisture_read()
-        self.temp = self.sensor.get_temp()
 
 
 class PiCamera:

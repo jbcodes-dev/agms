@@ -4,6 +4,7 @@ ID: 001239595
 Purpose: class definition for Air Sensor.
 """
 
+import time
 import board
 import adafruit_dht
 
@@ -35,3 +36,22 @@ class AirSensor:
 
         # log debug statement here
         self.sensor.exit()
+
+
+def main():
+    dht = AirSensor()
+
+    # test getting values every 10 seconds 5 times
+    i = 0
+    
+    while i < 5:
+        dht.fetch()
+        print(f"[TEST] (Air) T: {dht.temp} | H: {dht.humidity}")
+        time.sleep(10)
+        i += 1
+    
+    dht.cleanup()
+
+
+if __name__ == "__main__":
+    main()

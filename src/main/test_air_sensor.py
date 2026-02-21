@@ -1,5 +1,10 @@
-import unittest
+"""
+Author: Jake Brown
+ID: 001239595
+Purpose: uint tests for air sensor module.
+"""
 
+import unittest
 from air_sensor import AirSensor
 
 

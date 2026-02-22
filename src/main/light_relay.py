@@ -4,7 +4,6 @@ ID: 001239595
 Purpose: class definition for light relay.
 """
 
-import board
 import gpiozero
 import time
 

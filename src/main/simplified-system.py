@@ -6,65 +6,12 @@ from soil_sensor import SoilSensor
 from rpi_camera import RPiCamera
 
 from light_relay import LightRelay
+from fan_relay import FanRelay
+from pump_relay import PumpRelay
 
 import dbhandler
 
 import gpiozero
-
-
-class PumpRelay:
-    def __init__(self):
-        self.pin = 10
-        self.state = False
-        self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
-        self.relay.off()
-        self.interval = timedelta(hours=24)
-        self.next_activation = datetime.now()
-
-    def set_state(self, new_state):
-        self.state = new_state
-        
-        if self.state:
-            self.relay.on()
-
-        else:
-            self.relay.off()
-            self.next_activation += self.interval
-
-
-class FanG1Relay:
-    def __init__(self):
-        self.pin = 23
-        self.state = False
-        self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
-        self.relay.off()
-
-    def set_state(self, new_state):
-        self.state = new_state
-
-        if self.state:
-            self.relay.on()
-
-        else:
-            self.relay.off()
-
-
-class FanG2Relay:
-    def __init__(self):
-        self.pin = 24
-        self.state = False
-        self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
-        self.relay.off()
-
-
-    def set_state(self, new_state):
-        self.state = new_state
-
-        if self.state:
-            self.relay.on()
-
-        else:
-            self.relay.off()
 
 
 def main():
@@ -86,8 +33,8 @@ def main():
     ss = SoilSensor()
 
     # setup relays
-    fanset1 = FanG1Relay()
-    fanset2 = FanG2Relay()
+    fanset1 = FanRelay(1)
+    fanset2 = FanRelay(2)
     pump = PumpRelay()
     light = LightRelay()
 

@@ -5,26 +5,11 @@ from air_sensor import AirSensor
 from soil_sensor import SoilSensor
 from rpi_camera import RPiCamera
 
+from light_relay import LightRelay
+
 import dbhandler
 
 import gpiozero
-
-
-class LEDRelay:
-    def __init__(self):
-        self.pin = 9
-        self.state = False
-        self.relay = gpiozero.OutputDevice(self.pin, active_high=False, initial_value=False)
-        self.relay.off()
-        
-    def set_state(self, new_state):
-        self.state = new_state
-
-        if self.state:
-            self.relay.on()
-
-        else:
-            self.relay.off()
 
 
 class PumpRelay:
@@ -104,7 +89,7 @@ def main():
     fanset1 = FanG1Relay()
     fanset2 = FanG2Relay()
     pump = PumpRelay()
-    light = LEDRelay()
+    light = LightRelay()
 
     # setup database handler
     db = dbhandler.DBHandler("/home/jakebrown/final-year-project/src/database/database.db")

@@ -9,8 +9,8 @@ from amgs.relays.light_relay import LightRelay
 from amgs.relays.fan_relay import FanRelay
 from amgs.relays.pump_relay import PumpRelay
 
-from amgs.main.rpi_camera import RPiCamera
-from amgs.main.dbhandler import DBHandler
+from amgs.misc.rpi_camera import RPiCamera
+from amgs.misc.dbhandler import DBHandler
 
 
 

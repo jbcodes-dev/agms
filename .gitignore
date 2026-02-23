@@ -1,5 +1,8 @@
 .venv/
-src/main/__pycache__/
+src/amgs/__pycache__/
+src/amgs/main/__pycache__/
+src/amgs/sensors/__pycache__/
+src/amgs/relays/__pycache__/
 snapshots/
 src/database/database.db
 

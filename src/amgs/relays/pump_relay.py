@@ -33,7 +33,7 @@ def main():
     pump = PumpRelay()
 
     pump.set_state(True)
-    time.sleep(2.5)
+    time.sleep(3)
     pump.set_state(False)
 
 

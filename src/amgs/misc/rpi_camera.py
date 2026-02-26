@@ -6,7 +6,7 @@ class RPiCamera:
     def __init__(self, cycle_name):
         self.path = f"/home/jakebrown/final-year-project/snapshots/{cycle_name}/"
         self.camera = Camera()
-        self.interval = 30 
+        self.interval = 3600 
         self.last_ss_time = None 
         self.next_ss_time = datetime.now() 
         self.ss_taken = 0

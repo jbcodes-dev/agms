@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import gpiozero
 
 from amgs.sensors.air_sensor import AirSensor
-from amgs.sensors.soil_sensor import SoilSensor
+# from amgs.sensors.soil_sensor import SoilSensor
 
 from amgs.relays.light_relay import LightRelay
 from amgs.relays.fan_relay import FanRelay
@@ -17,10 +17,9 @@ from amgs.misc.dbhandler import DBHandler
 def main():
     # cycle config
     config = {
-        "runtime": 300,
+        "runtime": 864000, # 60 * 60 * 24 * 10
         "interval": 30,
-        "cycle": "test",
-        "run_alg": False,
+        "cycle": "one",
         "debug": True,
     }
 
@@ -30,7 +29,7 @@ def main():
 
     # setup sensors
     dht = AirSensor()
-    ss = SoilSensor()
+    # ss = SoilSensor()
 
     # setup relays
     fanset1 = FanRelay(1)
@@ -50,7 +49,6 @@ def main():
 [DEBUG]: ({datetime.now()}) {config['cycle']} cycle started with parameters:
     runtime: {config['runtime']}s
     interval: {config['interval']}s
-    run_alg: {config['run_alg']}
     debug: {config['debug']}""")
 
     # mainloop
@@ -58,11 +56,11 @@ def main():
 
         # fetch
         dht.fetch()
-        ss.fetch()
+        # ss.fetch()
 
         if config["debug"]:
             print(f"[DEBUG] ({datetime.now()}) air data fetched: T: {dht.temp} / H: {dht.humidity}")
-            print(f"[DEBUG] ({datetime.now()}) soil data fetched: T: {ss.temp} / M: {ss.moisture}")
+            # print(f"[DEBUG] ({datetime.now()}) soil data fetched: T: {ss.temp} / M: {ss.moisture}")
 
 
         # format
@@ -71,14 +69,14 @@ def main():
             "humidity": dht.humidity
         }
 
-        soil_data = {
-            "temperature": ss.temp,
-            "moisture": ss.moisture
-        }
+        # soil_data = {
+        #     "temperature": ss.temp,
+        #     "moisture": ss.moisture
+        # }
 
         # upload
         db.insert_data("air_data", air_data)
-        db.insert_data("soil_data", soil_data)
+        # db.insert_data("soil_data", soil_data)
 
         # capture and get path if time correct
         if datetime.now() >= camera.next_ss_time:
@@ -96,7 +94,6 @@ def main():
 
         # basic algorithm
         # in future: algorithm will be optimised by including more advanced algorithms such as PID and Rule-based fuzzy inference
-
 
         # due to the power draw of running a water pump, we will take care of the watering first to ensure the process has finished
         # in order to free up power for the remaining systems.

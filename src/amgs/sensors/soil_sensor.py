@@ -1,7 +1,7 @@
 """
 Author: Jake Brown
 ID: 001239595
-Purpose: class definition for soil sensor and its behaviour. 
+Purpose: Class definition for Soil Sensor and test its behaviour. 
 """
 
 import time
@@ -18,7 +18,7 @@ class SoilSensor:
         self.sensor = Seesaw(self.bus, addr=0x36)
 
     def fetch(self):
-        """ Fetch soil moisture and temperature readings. """
+        """ Fetch soil moisture and temperature readings. """        
         self.moisture = self.sensor.moisture_read()
         self.temp = self.sensor.get_temp()
 

@@ -3,7 +3,7 @@ import skfuzzy as skf
 from skfuzzy import control as ctrl
 
 
-class AirflowAlg:
+class AirflowAlgorithm:
     def __init__(self):
         self.temperature = None
         self.humidity = None
@@ -29,6 +29,7 @@ class AirflowAlg:
         self.create_rules()
 
         # setup fuzzy control system
+        self.create_system()
 
 
     def create_mf(self):
@@ -38,14 +39,14 @@ class AirflowAlg:
         self.temperature['hot'] = skf.trimf(temperature.universe, [22.0, 28.0, 28.0])
 
         # humidity membership functions
-        humidity['cold'] = skf.trimf(humidity.universe, [30.0, 30.0, 70.0])
-        humidity['norm'] = skf.trimf(humidity.universe, [50.0, 70.0, 80.0])
-        humidity['hot'] = skf.trimf(humidity.universe, [70.0, 90.0, 90.0])
+        self.humidity['cold'] = skf.trimf(humidity.universe, [30.0, 30.0, 70.0])
+        self.humidity['norm'] = skf.trimf(humidity.universe, [50.0, 70.0, 80.0])
+        self.humidity['hot'] = skf.trimf(humidity.universe, [70.0, 90.0, 90.0])
 
         # fans membership functions
-        fans['off'] = skf.trimf(fans.universe, [0, 0, 50])
-        fans['half'] = skf.trimf(fans.universe, [25, 50, 75])
-        fans['full'] = skf.trimf(fans.universe, [50, 100, 100])
+        self.fans['off'] = skf.trimf(fans.universe, [0, 0, 50])
+        self.fans['half'] = skf.trimf(fans.universe, [25, 50, 75])
+        self.fans['full'] = skf.trimf(fans.universe, [50, 100, 100])
 
 
     def create_rules(self):
@@ -58,7 +59,7 @@ class AirflowAlg:
     def create_system(self):
         # define control system
         self.fan_ctrl = ctrl.ControlSystem([self.rules[0], self.rules[1], self.rules[2]])
-        fan_sim = ctrl.ControlSystemSimulation(self.fan_ctrl)
+        self.fan_sim = ctrl.ControlSystemSimulation(self.fan_ctrl)
 
 
     def compute(self, temperature, humidity):
@@ -66,8 +67,6 @@ class AirflowAlg:
         self.fan_sim.input['humidity'] = humidity
 
         self.fan_sim.compute()
-
-        self.fan_sim.output('fans')
 
         if self.fan_sim.output['fans'] <= 35.0:
             return 'off'

@@ -12,6 +12,7 @@ from amgs.relays.pump_relay import PumpRelay
 from amgs.misc.rpi_camera import RPiCamera
 from amgs.misc.dbhandler import DBHandler
 
+from amgs.algorithm.airflow_algorithm import AirflowAlgorithm
 
 
 def main():
@@ -19,7 +20,7 @@ def main():
     config = {
         "runtime": 864000, # 60 * 60 * 24 * 10
         "interval": 30,
-        "cycle": "one",
+        "cycle": "two",
         "debug": True,
     }
 
@@ -36,6 +37,9 @@ def main():
     fanset2 = FanRelay(2)
     pump = PumpRelay()
     light = LightRelay()
+
+    # initialise airflow algorithm
+    airflow_alg = AirflowAlgorithm()
 
     # setup database handler
     db = DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
@@ -106,7 +110,7 @@ def main():
             if config["debug"]:
                 print(f"[DEBUG] ({datetime.now()})  pump: {pump.state}")
 
-            time.sleep(2.5)
+            time.sleep(3)
             pump.set_state(False)
 
             if config["debug"]:
@@ -121,25 +125,27 @@ def main():
         else:
             light.set_state(False)
 
-
+        
         # set fan relay
-        # if temp and humidity are more than optimum, activate both relays
-        # if temp < 18 turn off fan, if temp > 18 and < 24 turn on one fan
-        # if humidity < 45 turn off fan, if humidity > 45 and < 70 turn on one fan
+        # compute action via fuzzy algorithm using latest temperature and humidity reading
 
-        if dht.temp < 18.0 and dht.humidity < 45.0:
+        # compute
+        airflow_action = airflow_alg.compute(dht.temp, dht.humidity)
+
+        # run action
+        if airflow_action == 'off':
             fanset1.set_state(False)
             fanset2.set_state(False)
 
-        elif 18.0 < dht.temp < 24.0 and 45.0 < dht.humidity < 70.0:
+        elif airflow_action == 'half':
             fanset1.set_state(True)
             fanset2.set_state(False)
 
-        elif dht.temp > 24.0 or dht.humidity > 70.0:
+        else:
             fanset1.set_state(True)
             fanset2.set_state(True)
 
-        
+
         if config["debug"]:
             print(f"[DEBUG] ({datetime.now()})  fans: {fanset1.state} | {fanset2.state}")
             print(f"[DEBUG] ({datetime.now()}) light: {light.state}")

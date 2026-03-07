@@ -1,7 +1,7 @@
 """
 Author: Jake Brown
 ID: 001239595
-Purpose: unit tests for soil sensor module.
+Purpose: Unit tests for Soil Sensor module.
 """
 
 import unittest
@@ -25,4 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

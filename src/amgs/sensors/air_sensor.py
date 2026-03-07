@@ -1,7 +1,7 @@
 """
 Author: Jake Brown
 ID: 001239595
-Purpose: class definition for Air Sensor.
+Purpose: Class Definition for Air Sensor and test its behaviour.
 """
 
 import time
@@ -12,7 +12,6 @@ import adafruit_dht
 class AirSensor:
     def __init__(self):
         """ Initialise AirSensor with correct pin and create sensor instance. """
-
         self.pin = board.D4
         self.temp = 0
         self.humidity = 0
@@ -20,7 +19,6 @@ class AirSensor:
 
     def fetch(self):
         """ Fetch temperature and humidity from dht sensor. """
-
         # dht's can be tempermental, sometimes they won't read anything
         try:
             self.temp = self.sensor.temperature
@@ -33,7 +31,6 @@ class AirSensor:
 
     def cleanup(self):
         """ Cleanup DHT sensor before program exit. """
-
         # log debug statement here
         self.sensor.exit()
 

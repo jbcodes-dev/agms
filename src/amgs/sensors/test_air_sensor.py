@@ -1,7 +1,7 @@
 """
 Author: Jake Brown
 ID: 001239595
-Purpose: uint tests for air sensor module.
+Purpose: Unit tests for Air Sensor module.
 """
 
 import unittest

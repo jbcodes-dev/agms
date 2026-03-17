@@ -18,7 +18,7 @@ from amgs.algorithm.airflow_algorithm import AirflowAlgorithm
 def main():
     # cycle config
     config = {
-        "runtime": 864000, # 60 * 60 * 24 * 10
+        "runtime": 864000 - (60 * 60 * 6), # 60 * 60 * 24 * 10 (took 8 hours off due to crash)
         "interval": 30,
         "cycle": "two",
         "debug": True,

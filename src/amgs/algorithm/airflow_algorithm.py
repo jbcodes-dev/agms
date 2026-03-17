@@ -34,14 +34,14 @@ class AirflowAlgorithm:
 
     def create_mf(self):
         # temperature membership functions
-        self.temperature['cold'] = skf.trimf(self.temperature.universe, [18.0, 18.0, 20.0])
+        self.temperature['cold'] = skf.trimf(self.temperature.universe, [16.0, 16.0, 20.0])
         self.temperature['norm'] = skf.trimf(self.temperature.universe, [20.0, 22.0, 24.0])
         self.temperature['hot'] = skf.trimf(self.temperature.universe, [22.0, 28.0, 28.0])
 
         # humidity membership functions
-        self.humidity['cold'] = skf.trimf(self.humidity.universe, [30.0, 30.0, 70.0])
+        self.humidity['cold'] = skf.trimf(self.humidity.universe, [0.0, 0.0, 70.0])
         self.humidity['norm'] = skf.trimf(self.humidity.universe, [50.0, 70.0, 80.0])
-        self.humidity['hot'] = skf.trimf(self.humidity.universe, [70.0, 90.0, 90.0])
+        self.humidity['hot'] = skf.trimf(self.humidity.universe, [70.0, 100.0, 100.0])
 
         # fans membership functions
         self.fans['off'] = skf.trimf(self.fans.universe, [0, 0, 50])
@@ -67,7 +67,7 @@ class AirflowAlgorithm:
         self.fan_sim.input['humidity'] = humidity
 
         self.fan_sim.compute()
-
+        
         if self.fan_sim.output['fans'] <= 35.0:
             return 'off'
 
@@ -78,8 +78,8 @@ class AirflowAlgorithm:
             return 'full'
 
 
-
 if __name__ == '__main__':
     alg = AirflowAlgorithm()
 
-    print(alg.compute(22.0, 60.0))
+    print(alg.compute(17.8, 70.0))
+

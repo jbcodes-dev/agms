@@ -52,7 +52,7 @@ class IrrigationAlgorithm:
     def create_rules(self):
         # rules
         self.rules.append(ctrl.Rule(self.soil_temperature['cold'] | self.soil_moisture['low'], self.pump['short']))
-        self.rules.append(ctrl.Rule(self.soil_temperature['norm'] | self.soil_moisture['high', self.pump['medium']]))
+        self.rules.append(ctrl.Rule(self.soil_temperature['norm'] | self.soil_moisture['high'], self.pump['medium']))
         self.rules.append(ctrl.Rule(self.soil_temperature['hot'] | self.soil_moisture['high'], self.pump['long']))
 
 

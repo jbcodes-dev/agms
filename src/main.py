@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import gpiozero
 
 from amgs.sensors.air_sensor import AirSensor
-# from amgs.sensors.soil_sensor import SoilSensor
+from amgs.sensors.soil_sensor import SoilSensor
 
 from amgs.relays.light_relay import LightRelay
 from amgs.relays.fan_relay import FanRelay
@@ -13,14 +13,15 @@ from amgs.misc.rpi_camera import RPiCamera
 from amgs.misc.dbhandler import DBHandler
 
 from amgs.algorithm.airflow_algorithm import AirflowAlgorithm
+from amgs.algorithm.irrigation_algorithm import IrrigationAlgorithm
 
 
 def main():
     # cycle config
     config = {
-        "runtime": 864000 - (60 * 60 * 6), # 60 * 60 * 24 * 10 (took 8 hours off due to crash)
+        "runtime": 691200, # run for 8 days, started dying after day 8 in second cycle
         "interval": 30,
-        "cycle": "two",
+        "cycle": "three",
         "debug": True,
     }
 
@@ -30,7 +31,7 @@ def main():
 
     # setup sensors
     dht = AirSensor()
-    # ss = SoilSensor()
+    ss = SoilSensor()
 
     # setup relays
     fanset1 = FanRelay(1)
@@ -40,6 +41,7 @@ def main():
 
     # initialise airflow algorithm
     airflow_alg = AirflowAlgorithm()
+    irrigation_alg = IrrigationAlgorithm()
 
     # setup database handler
     db = DBHandler("/home/jakebrown/final-year-project/src/database/database.db")
@@ -60,11 +62,11 @@ def main():
 
         # fetch
         dht.fetch()
-        # ss.fetch()
+        ss.fetch()
 
         if config["debug"]:
             print(f"[DEBUG] ({datetime.now()}) air data fetched: T: {dht.temp} / H: {dht.humidity}")
-            # print(f"[DEBUG] ({datetime.now()}) soil data fetched: T: {ss.temp} / M: {ss.moisture}")
+            print(f"[DEBUG] ({datetime.now()}) soil data fetched: T: {ss.temp} / M: {ss.moisture}")
 
 
         # format
@@ -73,14 +75,14 @@ def main():
             "humidity": dht.humidity
         }
 
-        # soil_data = {
-        #     "temperature": ss.temp,
-        #     "moisture": ss.moisture
-        # }
+        soil_data = {
+            "temperature": ss.temp,
+            "moisture": ss.moisture
+        }
 
         # upload
         db.insert_data("air_data", air_data)
-        # db.insert_data("soil_data", soil_data)
+        db.insert_data("soil_data", soil_data)
 
         # capture and get path if time correct
         if datetime.now() >= camera.next_ss_time:
@@ -96,28 +98,39 @@ def main():
             if config["debug"]:
                 print(f"[DEBUG] ({datetime.now()}) snapshot taken at {path}")
 
-        # basic algorithm
-        # in future: algorithm will be optimised by including more advanced algorithms such as PID and Rule-based fuzzy inference
 
         # due to the power draw of running a water pump, we will take care of the watering first to ensure the process has finished
         # in order to free up power for the remaining systems.
 
-        # activate pump for 3 seconds to see how much water is moved
-        # test as part of the system to understand power draw
+        # check if pump should be activated
         if datetime.now() >= pump.next_activation:
+            # compute pump activation duration
+            irrigation_action = irrigation_alg.compute(ss.temp, ss.moisture)
+
+            # run action
+            if irrigation_action == 'short':
+                duration = 3.0
+            
+            elif irrigation_action == 'medium':
+                duration = 4.0
+            
+            else:
+                duration = 5.0
+
+            # activate pump
             pump.set_state(True)
 
             if config["debug"]:
                 print(f"[DEBUG] ({datetime.now()})  pump: {pump.state}")
 
-            time.sleep(3)
+            time.sleep(duration)
             pump.set_state(False)
 
             if config["debug"]:
                 print(f"[DEBUG] ({datetime.now()})  pump: {pump.state}")
+                print(f"[DEBUG] ({datetime.now()})  pump: duration: {duration} seconds")
 
 
-        # set light relay
         # turn on light if time is between 6pm and 6am
         if datetime.now().hour >= 18 or datetime.now().hour < 6:
             light.set_state(True)
@@ -126,10 +139,7 @@ def main():
             light.set_state(False)
 
         
-        # set fan relay
-        # compute action via fuzzy algorithm using latest temperature and humidity reading
-
-        # compute
+        # compute airflow action
         airflow_action = airflow_alg.compute(dht.temp, dht.humidity)
 
         # run action

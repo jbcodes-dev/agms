@@ -1,3 +1,9 @@
+"""
+Author: Jake Brown
+ID: 001239595
+Purpose: class definition for main application module.
+"""
+
 import time
 from datetime import datetime, timedelta
 import gpiozero

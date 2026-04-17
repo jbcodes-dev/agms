@@ -1,3 +1,9 @@
+"""
+Author: Jake Brown
+ID: 001239595
+Purpose: class definition for database module.
+"""
+
 import sqlite3
 import sys
 

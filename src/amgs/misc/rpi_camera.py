@@ -1,27 +1,11 @@
+"""
+Author: Jake Brown
+ID: 001239595
+Purpose: class definition for camera module.
+"""
 from datetime import datetime, timedelta
-# from picamzero import Camera
 from picamera2.picamera2 import Picamera2, Preview
 import time
-
-
-'''
-def cam():
-    path = '/home/jakebrown/final-year-project/snapshots/two/'
-    file = 'picamera2-test.jpg'
-    rpicam = Picamera2()
-
-    config = rpicam.create_preview_configuration()
-    rpicam.configure(config)
-    rpicam.start()
-
-    time.sleep(2)
-
-    rpicam.capture_file(f'{path}{file}')
-
-    rpicam.stop()
-
-    print(f'image saved to {path} as {file}')
-'''
 
 
 class RPiCamera:

@@ -1,3 +1,9 @@
+"""
+Author: Jake Brown
+ID: 001239595
+Purpose: class definition for fuzzy-logic airflow algorithm module.
+"""
+
 import numpy as np
 import skfuzzy as skf
 from skfuzzy import control as ctrl

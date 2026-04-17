@@ -8,7 +8,7 @@ import unittest
 from fan_relay import FanRelay
 
 
-class FanRelayTests(unittest.TestCase):
+class FanRelayTest(unittest.TestCase):
     def test_fan_runs(self):
         """ Check visually if fans working. """
         fanset1 = FanRelay(1)
